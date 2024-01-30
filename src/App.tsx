@@ -31,7 +31,7 @@ function App() {
           <AiOutlineCloudUpload size={"50px"} />
           <Box
             ml="20px" 
-            direction={"column"}
+            flexDirection={"column"}
           >
             <Text fontSize="lg" fontWeight="bold" color="#333">Escolha uma imagem local</Text>
             <Text fontSize="sm" color="#666">Limite 100MB por arquivo. JPG, JPEG</Text>
