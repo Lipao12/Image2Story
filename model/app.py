@@ -11,8 +11,6 @@ def img2txt(url):
 
     text = image_to_text(url)[0]['generated_text']
     #text = image_to_text(url)
-    print(text)
-
     return text
 
 def createStory(): # use llama to it
@@ -30,5 +28,5 @@ def text2speech(message):
         file.write(response.content)
     
 
-description = img2txt("https://ucpparana.edu.br/content/uploads/2020/11/group-of-people-smiling.jpg")
-text2speech(description)
+#description = img2txt("https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/dingo-charissa-allan.jpg")
+#text2speech(description)
