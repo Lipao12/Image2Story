@@ -13,7 +13,7 @@ def img2txt(url):
     #text = image_to_text(url)
     return text
 
-def createStory(): # use llama to it
+def createStory(): # use llama to do this
     pass
 
 def text2speech(message):
@@ -23,10 +23,15 @@ def text2speech(message):
         "inputs": message
     }
     response = requests.post(API_URL, headers=headers, json=payloads)
-
-    with open('audio.flac', 'wb') as file:
-        file.write(response.content)
+    if response.status_code == 200:
+        with open('audio.mp3', 'wb') as file: #.flac
+            file.write(response.content)
+        return 'audio.mp3'
+    else:
+        raise Exception(f"Failed to convert text to speech. Status code: {response.status_code}")
+    #with open('audio.mp3', 'wb') as file: #.flac
+    #    file.write(response.content)
     
-
-#description = img2txt("https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/dingo-charissa-allan.jpg")
-#text2speech(description)
+if __name__ == '__main__':
+    description = img2txt("https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/dingo-charissa-allan.jpg")
+    print(description)
