@@ -1,30 +1,24 @@
-# React + TypeScript + Vite
+# Story Maker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+O Story Maker é uma aplicação que permite aos usuários criar histórias a partir de imagens escolhidas ou aleatórias. Ele usa modelos de processamento de linguagem natural (NLP) e inteligência artificial (IA) para converter imagens em texto, criar histórias com base nesse texto e até mesmo gerar áudio das histórias.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Conversão de Imagem para Texto:** A aplicação pode converter imagens em texto usando modelos de visão computacional.
+- **Criação de Histórias:** Com base no texto extraído das imagens, a aplicação gera histórias usando modelos de linguagem.
+- **Conversão de Texto para Áudio:** As histórias criadas podem ser convertidas em áudio para facilitar a audição.
 
-## Expanding the ESLint configuration
+## Como Usar
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Pré-requisitos
 
-- Configure the top-level `parserOptions` property like this:
+- Python 3.x instalado
+- Node.js e npm instalados
+- Conta no Hugging Face para acesso aos modelos de IA
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+### Instalação
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. Clone o repositório:
+
+   ```bash
+   git clone https://github.com/seu-usuario/story-maker.git
