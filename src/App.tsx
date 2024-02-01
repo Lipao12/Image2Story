@@ -2,6 +2,7 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 import { fetchRandomImage } from "./helpers/unsplash";
+import ErrorBox from "./ui/components/ErrorBox";
 import ImageUploadBox from "./ui/components/ImageUpload";
 import Loading from "./ui/components/Loading";
 import StoryContent from "./ui/components/StoryContent";
@@ -11,20 +12,20 @@ function App() {
   const [storyText, setStoryText] = useState("");
   const [audioFile, setAudioFile] = useState("");
   const [cenario, setCenario] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [waitingMessage, setWaitingMessage] = useState("Carregando imagem!");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLocalFile = (imageUrl) => {
+  const handleLocalFile = async (localImageUrl) => {
+    setErrorMessage("");
     console.log("Carregando imagem!");
     setIsLoading(true);
-    console.log("ImageUrl: ", imageUrl);
-    setImageUrl(imageUrl);
-    const sub = imageUrl.substring(0, 5);
-    const img = imageUrl.replace(sub, "");
-    processImage2Story(img);
+    setImageUrl(localImageUrl);
+    processImage2Story(localImageUrl);
   };
 
   const handleRandomImage = async () => {
+    setErrorMessage("");
     console.log("Carregando imagem!");
     setIsLoading(true);
     const randomImageUrl = await fetchRandomImage();
@@ -32,10 +33,10 @@ function App() {
     processImage2Story(randomImageUrl);
   };
 
-  const convert2Text = async (imageUrl: any) => {
+  const convert2Text = async (imageURL) => {
     const response = await axios.get("http://localhost:4000/convert_image", {
       params: {
-        imageUrl: imageUrl,
+        imageUrl: imageURL,
       },
     });
     //return response.data.title;
@@ -60,14 +61,14 @@ function App() {
     return response.data.audio_file;
   };
 
-  const processImage2Story = async (imageUrl) => {
+  const processImage2Story = async (localImageUrl) => {
     console.log("Carregando cenário!");
     setWaitingMessage("Criando cenário!");
     let cenario = "";
     let story = "";
 
     try {
-      cenario = await convert2Text(imageUrl);
+      cenario = await convert2Text(localImageUrl);
       console.log(cenario);
       setCenario(cenario.title);
       console.log("Carregando história!");
@@ -80,7 +81,11 @@ function App() {
         setWaitingMessage("Criando áudio!");
         console.log("Carregando áudio!");
       } catch (error) {
-        console.error("Error converting text to speech:", error);
+        console.error("Error creating the story:", error);
+        setErrorMessage(
+          "Desculpe! Ocorreu um erro ao criar a história. Estatos do erro: " +
+            error.request.status
+        );
       }
 
       try {
@@ -88,9 +93,17 @@ function App() {
         setAudioFile(audio_path);
       } catch (error) {
         console.error("Error converting text to speech:", error);
+        setErrorMessage(
+          "Desculpe! Ocorreu um erro ao converter para áudio. Estatos do erro: " +
+            error.request.status
+        );
       }
     } catch (error) {
       console.error("Error converting image to text:", error);
+      setErrorMessage(
+        "Desculpe! Ocorreu um erro ao criar o cenário da história. Estatos do erro: " +
+          error.request.status
+      );
     } finally {
       setIsLoading(false);
     }
@@ -119,6 +132,7 @@ function App() {
           story={storyText}
         />
       )}
+      {errorMessage && <ErrorBox message={errorMessage} />}
     </Box>
   );
 }

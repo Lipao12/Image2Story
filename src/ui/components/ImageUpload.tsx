@@ -1,12 +1,32 @@
 import { Box, Button, Text } from "@chakra-ui/react";
+import axios from "axios";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 
 const ImageUploadBox = (props) => {
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
+
     if (selectedFile) {
-      let imageUrl = URL.createObjectURL(selectedFile);
-      props.onFileSelect(imageUrl);
+      console.log(selectedFile);
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      try {
+        const response = await axios.post(
+          "http://localhost:4000/upload",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        const url = "http://localhost:4000" + response.data.url;
+        props.onFileSelect(url);
+      } catch (error) {
+        console.error("Erro ao enviar arquivo:", error);
+      }
     }
   };
 

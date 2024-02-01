@@ -12,7 +12,6 @@ def img2txt(url):
     image_to_text = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
 
     text = image_to_text(url)[0]['generated_text']
-    #text = image_to_text(url)
     return text
 
 def createStory(input): # use llama to do this
@@ -47,6 +46,7 @@ def text2speech(message):
     #    file.write(response.content)
     
 if __name__ == '__main__':
+    print(img2txt("photo.jpg"))
     #description = img2txt("https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/dingo-charissa-allan.jpg")
     #print(description)
-    print(createStory("a lighthouse on the coast with a cloudy sky"))
+    #print(createStory("a lighthouse on the coast with a cloudy sky"))

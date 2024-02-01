@@ -1,5 +1,3 @@
-// ImageContent.js
-
 import {
   Accordion,
   AccordionButton,
@@ -46,9 +44,8 @@ const StoryContent = (props) => {
         </AccordionItem>
       </Accordion>
 
-      <audio controls style={{ width: "100%" }}>
-        <source src={props.audioFile} type="audio/mpeg" />
-        Não há suporte
+      <audio controls style={{ width: "100%" }} src={props.audioFile}>
+        Seu navegador não suporta a reprodução de áudio.
       </audio>
       <Text fontSize="xs" mt={4}>
         Obs.: por hora o áudio será do texto em inglês, mas já estamos
