@@ -1,4 +1,4 @@
-from model.app import img2txt, text2speech
+from model.app import img2txt, text2speech, createStory
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from googletrans import Translator
@@ -7,6 +7,7 @@ app = Flask(__name__)
 CORS(app, resources={
     r"/convert_image": {"origins": "http://localhost:5173"},
     r"/convert_speech": {"origins": "http://localhost:5173"},
+    r"/create_story": {"origins": "http://localhost:5173"},
 })
 
 translator = Translator()
@@ -21,6 +22,20 @@ def convert_image():
         text = img2txt(imageUrl)
         translated_text = translator.translate(text, dest='pt').text
         return jsonify({'title': translated_text, 'title_english':text}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/create_story', methods=['GET'])
+def create_story():
+    text = request.args.get('text')
+    if not text:
+        return jsonify({'error': 'Missing text parameter'}), 400
+    try:
+        story = createStory(text)
+        print(story)
+        story_translated = translator.translate(story, dest='pt').text
+        return jsonify({'story': story_translated, 'story_english':story}), 200
+        #return jsonify({'story': story}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

@@ -2,6 +2,8 @@ from dotenv import find_dotenv, load_dotenv
 from transformers import pipeline
 import os
 import requests
+import json
+
 
 load_dotenv(find_dotenv())
 HUGGINFACE_API_TOKEN = os.getenv("HUGGINFACE_API_TOKEN")
@@ -13,8 +15,20 @@ def img2txt(url):
     #text = image_to_text(url)
     return text
 
-def createStory(): # use llama to do this
-    pass
+def createStory(input): # use llama to do this
+    API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.1"
+    headers = {"Authorization": f"Bearer {HUGGINFACE_API_TOKEN}"}
+    payloads = {
+        "inputs": input,
+    }
+    response = requests.post(API_URL, headers=headers, json=payloads)
+    if response.status_code == 200:
+        data = json.loads(response.content)
+        generated_text = data[0]['generated_text']
+        return generated_text
+    else:
+        print(f"Request failed with status code: {response.status_code}")
+        return None
 
 def text2speech(message):
     API_URL = "https://api-inference.huggingface.co/models/espnet/kan-bayashi_ljspeech_vits"
@@ -33,5 +47,6 @@ def text2speech(message):
     #    file.write(response.content)
     
 if __name__ == '__main__':
-    description = img2txt("https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/dingo-charissa-allan.jpg")
-    print(description)
+    #description = img2txt("https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/dingo-charissa-allan.jpg")
+    #print(description)
+    print(createStory("a lighthouse on the coast with a cloudy sky"))
