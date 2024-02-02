@@ -15,7 +15,9 @@ def img2txt(url):
     return text
 
 def createStory(input): # use llama to do this
-    API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.1"
+    #API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.1"
+    #API_URL = "https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf"
+    API_URL = "https://api-inference.huggingface.co/models/gpt2"
     headers = {"Authorization": f"Bearer {HUGGINFACE_API_TOKEN}"}
     payloads = {
         "inputs": input,
@@ -46,7 +48,6 @@ def text2speech(message):
     #    file.write(response.content)
     
 if __name__ == '__main__':
-    print(img2txt("photo.jpg"))
     #description = img2txt("https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/dingo-charissa-allan.jpg")
     #print(description)
-    #print(createStory("a lighthouse on the coast with a cloudy sky"))
+    print(createStory("a lighthouse on the coast with a cloudy sky"))
