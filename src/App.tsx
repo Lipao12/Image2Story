@@ -16,7 +16,7 @@ function App() {
   const [waitingMessage, setWaitingMessage] = useState("Carregando imagem!");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLocalFile = async (localImageUrl) => {
+  const handleLocalFile = async (localImageUrl: string) => {
     setErrorMessage("");
     console.log("Carregando imagem!");
     setIsLoading(true);
@@ -33,7 +33,7 @@ function App() {
     processImage2Story(randomImageUrl);
   };
 
-  const convert2Text = async (imageURL) => {
+  const convert2Text = async (imageURL: string) => {
     const response = await axios.get("http://localhost:4000/convert_image", {
       params: {
         imageUrl: imageURL,
@@ -61,26 +61,26 @@ function App() {
     return response.data.audio_file;
   };
 
-  const processImage2Story = async (localImageUrl) => {
+  const processImage2Story = async (localImageUrl: string) => {
     console.log("Carregando cenário!");
     setWaitingMessage("Criando cenário!");
-    let cenario = "";
-    let story = "";
+    let res_cenario = null;
+    let res_story = null;
 
     try {
-      cenario = await convert2Text(localImageUrl);
-      console.log(cenario);
-      setCenario(cenario.title);
+      res_cenario = await convert2Text(localImageUrl);
+      console.log("Res", res_cenario);
+      setCenario(res_cenario.title);
       console.log("Carregando história!");
       setWaitingMessage("Criando história!");
 
       try {
-        story = await createStory(cenario.title_english);
-        console.log(story);
-        setStoryText(story.story);
+        res_story = await createStory(res_cenario.title_english);
+        console.log("story", res_story);
+        setStoryText(res_story);
         setWaitingMessage("Criando áudio!");
         console.log("Carregando áudio!");
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error creating the story:", error);
         setErrorMessage(
           "Desculpe! Ocorreu um erro ao criar a história. Estatos do erro: " +
@@ -89,16 +89,16 @@ function App() {
       }
 
       try {
-        const audio_path = await convert2Speech(story.story_english);
+        const audio_path = await convert2Speech(res_story.story_english);
         setAudioFile(audio_path);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error converting text to speech:", error);
         setErrorMessage(
           "Desculpe! Ocorreu um erro ao converter para áudio. Estatos do erro: " +
             error.request.status
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error converting image to text:", error);
       setErrorMessage(
         "Desculpe! Ocorreu um erro ao criar o cenário da história. Estatos do erro: " +

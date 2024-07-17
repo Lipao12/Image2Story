@@ -2,8 +2,13 @@ import { Box, Button, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 
-const ImageUploadBox = (props) => {
-  const handleFileChange = async (event) => {
+interface ImageUploadBoxProps {
+  onFileSelect: (url: string) => void;
+  onClickRandom: () => void;
+}
+
+const ImageUploadBox = (props: ImageUploadBoxProps) => {
+  const handleFileChange = async (event: any) => {
     const selectedFile = event.target.files[0];
 
     if (selectedFile) {
