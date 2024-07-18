@@ -5,12 +5,14 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Button,
   Text,
 } from "@chakra-ui/react";
 
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { DostAnim } from "./dots-animation/dots-animation";
+import Loading from "./Loading";
 
 interface StoryContentProps {
   imageUrl: string;
@@ -22,7 +24,9 @@ interface StoryContentProps {
 const StoryContent = (props: StoryContentProps) => {
   const [story, setStory] = useState({ story: "", story_english: "" });
   //const [stringToCreate, setStringToCreate] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [audioPath, setAudioPath] = useState("");
+  const [isLoadingText, setIsLoadingText] = useState(false);
+  const [isLoadingAudio, setIsLoadingAudio] = useState<boolean>(false);
 
   useEffect(() => {
     setStory(props.story);
@@ -31,7 +35,7 @@ const StoryContent = (props: StoryContentProps) => {
   const continueStory = async (text_english: any, text_portuguese: any) => {
     try {
       console.log("O que estou querendo enviar: ", text_english.stringToCreate);
-      setIsLoading(true);
+      setIsLoadingText(true);
       const response = await axios.get("http://localhost:4000/create_story", {
         params: {
           text: text_english.stringToCreate,
@@ -56,12 +60,12 @@ const StoryContent = (props: StoryContentProps) => {
     } catch (error) {
       console.error("Error fetching story:", error);
     } finally {
-      setIsLoading(false);
+      setIsLoadingText(false);
     }
   };
 
   const verifyText = (text_response: string, substring_sent: any) => {
-    return text_response.replace(substring_sent.stringToCreate, "");
+    return text_response.replace(substring_sent.stringToCreate.trim(), "");
   };
 
   const findStringAfterLastPeriod = (inputString: string) => {
@@ -99,6 +103,22 @@ const StoryContent = (props: StoryContentProps) => {
     const lastPStringPT = findStringAfterLastPeriod(story.story);
     const lastPStringEN = findStringAfterLastPeriod(story.story_english);
     continueStory(lastPStringEN, lastPStringPT);
+  };
+
+  const convert2Speech = async () => {
+    setIsLoadingAudio(true);
+    try {
+      const response = await axios.get("http://localhost:4000/convert_speech", {
+        params: {
+          text: story.story_english,
+        },
+      });
+      setAudioPath(response.data.audio_file);
+    } catch (err: any) {
+      console.log(err);
+    } finally {
+      setIsLoadingAudio(false);
+    }
   };
 
   return (
@@ -144,7 +164,7 @@ const StoryContent = (props: StoryContentProps) => {
               <Text marginBottom={4} whiteSpace="pre-wrap">
                 {story.story}
               </Text>
-              {isLoading ? (
+              {isLoadingText ? (
                 <DostAnim />
               ) : (
                 <Text
@@ -169,9 +189,18 @@ const StoryContent = (props: StoryContentProps) => {
         </AccordionItem>
       </Accordion>
 
-      <audio controls style={{ width: "100%" }} src={props.audioFile}>
-        Seu navegador não suporta a reprodução de áudio.
-      </audio>
+      <Button onClick={convert2Speech}>Gerar Áudio da historia</Button>
+      {isLoadingAudio && <Loading message={""} />}
+      {audioPath && !isLoadingAudio && (
+        <audio
+          controls
+          style={{ width: "100%", marginTop: "20px" }}
+          src={audioPath}
+        >
+          Seu navegador não suporta a reprodução de áudio.
+        </audio>
+      )}
+
       <Text fontSize="xs" mt={4}>
         Obs.: por hora o áudio será do texto em inglês, mas já estamos
         trabalhando para corrigir isso :)

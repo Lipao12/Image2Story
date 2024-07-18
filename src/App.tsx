@@ -52,15 +52,6 @@ function App() {
     return response.data;
   };
 
-  const convert2Speech = async (text: string) => {
-    const response = await axios.get("http://localhost:4000/convert_speech", {
-      params: {
-        text: text,
-      },
-    });
-    return response.data.audio_file;
-  };
-
   const processImage2Story = async (localImageUrl: string) => {
     console.log("Carregando cenário!");
     setWaitingMessage("Criando cenário!");
@@ -88,7 +79,7 @@ function App() {
         );
       }
 
-      try {
+      /*try {
         const audio_path = await convert2Speech(res_story.story_english);
         setAudioFile(audio_path);
       } catch (error: any) {
@@ -97,7 +88,7 @@ function App() {
           "Desculpe! Ocorreu um erro ao converter para áudio. Estatos do erro: " +
             error.request.status
         );
-      }
+      }*/
     } catch (error: any) {
       console.error("Error converting image to text:", error);
       setErrorMessage(
@@ -124,13 +115,8 @@ function App() {
       />
 
       {isLoading && <Loading message={waitingMessage} />}
-      {imageUrl && !isLoading && audioFile && (
-        <StoryContent
-          imageUrl={imageUrl}
-          cenario={cenario}
-          audioFile={audioFile}
-          story={storyText}
-        />
+      {imageUrl && !isLoading && (
+        <StoryContent imageUrl={imageUrl} cenario={cenario} story={storyText} />
       )}
       {errorMessage && <ErrorBox message={errorMessage} />}
     </Box>
