@@ -23,7 +23,7 @@ def createStory(input_text): # use llama to do this
         The text reads: 'Once upon a time, in a distant city, there was an old clock that...'. 
         Create a story based on this snippet, exploring who might have written it, the significance of the clock in the city, and how it impacted the lives of the people around.'''
         system_input = "you are a skilled storyteller, tasked with weaving a tale inspired by this theme."
-        system_input = "You are a skilled storyteller. You must create a story from a given passage. The section should not be repeated."
+        system_input = "You are a skilled storyteller. You must continue a story from a given passage."
         API_URL = "https://api-inference.huggingface.co/models/openai-community/gpt2"
         headers = {"Authorization": f"Bearer {HUGGINGFACE_API_TOKEN}"}
         payloads = {
