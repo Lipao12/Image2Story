@@ -52,7 +52,3 @@ Com a imagem selecionada e tudo funcionando corretamente, temos isto:
     
 
 Para realizar o upload local da imagem e utilizá-la nos modelos, eu tive que hospedar essa imagem. Para isso, criei o endpoint `/upload` e para ter acesso à imagem `/uploads/<filename>`. Para realizar o upload, toda vez que este endpoint for chamado, eu apago a pasta chamada `uploads` e depois a recrio, assim, eu não fico ocupando muito espaço com as imagens selecionadas localmente.
-
-- Código desses 2 endpoints:
-
-```python
