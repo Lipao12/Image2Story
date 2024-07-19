@@ -202,8 +202,7 @@ const StoryContent = (props: StoryContentProps) => {
       )}
 
       <Text fontSize="xs" mt={4}>
-        Obs.: por hora o áudio será do texto em inglês, mas já estamos
-        trabalhando para corrigir isso :)
+        Obs.: por enquanto, o áudio será em inglês :)
       </Text>
     </Box>
   );

@@ -53,9 +53,7 @@ const ImageUploadBox = (props: ImageUploadBoxProps) => {
               <Text fontSize="lg" fontWeight="bold" color="#333">
                 Escolha uma imagem local
               </Text>
-              <Text fontSize="sm" color="#666">
-                Limite 100MB por arquivo. JPG, JPEG
-              </Text>
+              <Text fontSize="sm" color="#666"></Text>
             </Box>
           </div>
           <Button
