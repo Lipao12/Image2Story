@@ -1,58 +1,54 @@
-Esse projeto temos um frontend simples que de início é assim:
+# Image to Story
 
-- Imagem 1
-    
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/17c4e6cd-34f2-4c59-aa45-b14448f6dde8/5b59d044-76b6-466d-8c8f-3388bcc942f1/Untitled.png)
-    
+Este projeto possui um frontend simples que, inicialmente, é assim:
 
-Ao clicar no botão “Aleatório”, o site faz um request a API [`https://api.unsplash.com`](https://api.unsplash.com/) utilizando o seguinte endpoint `/photos/random?query=landscape&client_id=` para ter uma imagem aleatória.
-
-Como estou utilizando os modelos de ML, nesse caso LLM, eu preferi utilizar a linguagem python. Então, para integrar o meu frontend com o backend eu tive que criar uma API em python utilizando a biblioteca `flask`.
-
-Ao ser selecionado a imagem será feito as seguintes etapas:
-
-- 1. Será chamado o endpoin `/convert_image` que é o método `GET`
+- Imagem 1:
     
-    Aqui o será chamada a função `img2text` que irá utilizar `pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")`. De primeiro, o modelo não está treinado. 
-    
-    Esse modelo, por algum motivo, apenas aceita URL da imagem como entrada.
-    
-    O modelo retornará em inglês, então utilizei o método `Translator` da biblioteca `googletrans` para traduzir o cenário gerado para o português. 
-    
-    O endpoit retornará `return jsonify({'title': translated_text, 'title_english':text}), 200`.
-    
-    OBS.: tem quase 1Gb de tamanho.
-    
-- 2. Será chamado o endpoint `/create_story` que é o método `GET`
-    
-    Aqui a função `text2speech` será chamada. Nela, estou utilizando o modelo `gpt2` para criar a história a partir do cenário retirado da imagem em `\convert_image`. 
-    
-    A história será em inglês, então utilizei o método `Translator` da biblioteca `googletrans` para traduzir a história gerada para o português. 
-    
-    O endpoit retornará `return jsonify({'story': story_translated, 'story_english':story}), 200`
-    
-    Obs.: estou utilizando a *API interference*, já que é uma aplicação de demonstração, além de que eu não tenho muito espaço para utilizar o modelo completo. Utilizei a seguinte url da API `API_URL = "https://api-inference.huggingface.co/models/gpt2"`. Ao utilizar isso, eu poderia fazer pelo *JavaScript*, mas como eu criei uma API para o primeiro modelo em python, preferi continuar assim.
-    
-- 3. Será chamado o endpoint `/convert_speech` que é o método `GET`
-    
-    Aqui estou utilizando, novamente, pela *API interference.* `API_URL = "https://api-inference.huggingface.co/models/espnet/kan-bayashi_ljspeech_vits"` é o url do modelo. Basicamente, irei chamar a função `text2speech` e irei passar a história criada em inglês. 
-    
-    Essa função criará um áudio e retornará o caminho desse áudio.
-    
-    O endpoint irá retornar esse caminho.
+    ![Início da página](https://drive.google.com/uc?export=view&id=1ljMF6ozXK-0UJ5yqO5B4qJu5m2wscKKz)
     
 
-Com a imagem selecionada e tudo funcionando corretamente temos isso daqui:
+Ao clicar no botão “Aleatório”, o site faz uma requisição à API [https://api.unsplash.com](https://api.unsplash.com/) utilizando o seguinte endpoint `/photos/random?query=landscape&client_id=` para obter uma imagem aleatória.
 
-- Imagem 2
+Como estou utilizando os modelos de Machine Learning, nesse caso Large Lenguage Model, eu preferi utilizar a linguagem Python. Para integrar o meu frontend com o backend, criei uma API em Python utilizando a biblioteca `Flask`.
+
+Ao ser selecionada a imagem, serão realizadas as seguintes etapas:
+
+1. **Chamada ao endpoint `/convert_image` (Método GET):**
     
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/17c4e6cd-34f2-4c59-aa45-b14448f6dde8/4e196fdc-6e31-4388-8bf8-ceb12673b008/Untitled.png)
+    Aqui será chamada a função `img2text` que utilizará `pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")`. Inicialmente, o modelo não está treinado.
     
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/17c4e6cd-34f2-4c59-aa45-b14448f6dde8/abb95d34-1b29-4a28-8868-2dbd87edef47/Untitled.png)
+    Este modelo, por algum motivo, apenas aceita URLs de imagens como entrada.
+    
+    O modelo retornará o texto em inglês, então utilizei o método `Translator` da biblioteca `googletrans` para traduzir o cenário gerado para o português.
+    
+    O endpoint retornará: `return jsonify({'title': translated_text, 'title_english': text}), 200`.
+    
+    **OBS:** O modelo tem quase 1 GB de tamanho.
+    
+2. **Chamada ao endpoint `/create_story` (Método GET):**
+    
+    Aqui a função `text2story` será chamada. Nela, estou utilizando o modelo `gpt2` para criar a história a partir do cenário retirado da imagem em `/convert_image`.
+    
+    A história será em inglês, então utilizei o método `Translator` da biblioteca `googletrans` para traduzir a história gerada para o português.
+    
+    O endpoint retornará: `return jsonify({'story': story_translated, 'story_english': story}), 200`.
+    
+    **Obs:** Estou utilizando a *API inference*, já que é uma aplicação de demonstração, além de que eu não tenho muito espaço para utilizar o modelo completo. Utilizei a seguinte URL da API: `API_URL = "https://api-inference.huggingface.co/models/gpt2"`. Ao utilizar isso, eu poderia fazer pelo *JavaScript*, mas como eu criei uma API para o primeiro modelo em Python, preferi continuar assim.
+    
+3. **Chamada ao endpoint `/convert_speech` (Método GET):**
+    
+    Aqui estou utilizando, novamente, a *API inference*. A URL do modelo é: `API_URL = "https://api-inference.huggingface.co/models/espnet/kan-bayashi_ljspeech_vits"`. Basicamente, chamarei a função `text2speech` e passarei a história criada em inglês.
+    
+    Esta função criará um áudio e retornará o caminho desse áudio.
+    
+    O endpoint retornará este caminho.
     
 
-Para realizar o upload local da imagem e utilizar essa imagem nos modelos eu tive que hostear essa imagem. Para isso eu criei o endpoint `/upload` e para ter acesso a imagem `/uploads/<filename>`. Para realizar o upload, toda vez que esse endpoit for chamado, eu apago a pasta chamada `uploads` e depois eu crio ela de novo, assim, eu não fico ocupando muito espaço com as imagens selecionadas localmente.
+Com a imagem selecionada e tudo funcionando corretamente, temos isto:
 
-- Código desses 2 endpoits
+- Imagem 2:    
+    ![Resultado com Imagem Selecionada](https://drive.google.com/uc?export=view&id=1HMgalSy6hSIf7mVT81feYvAB_Vw733IY)
+    ![Resultado com História Gerada](https://drive.google.com/uc?export=view&id=1c2vajYYmsxUWpb3X9Axh4V8LjnwqDAcq)
+    
 
-   
+Para realizar o upload local da imagem e utilizá-la nos modelos, eu tive que hospedar essa imagem. Para isso, criei o endpoint `/upload` e para ter acesso à imagem `/uploads/<filename>`. Para realizar o upload, toda vez que este endpoint for chamado, eu apago a pasta chamada `uploads` e depois a recrio, assim, eu não fico ocupando muito espaço com as imagens selecionadas localmente.
