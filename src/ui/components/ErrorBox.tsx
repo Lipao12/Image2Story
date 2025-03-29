@@ -1,6 +1,6 @@
 import { Box, Text } from "@chakra-ui/react";
 
-const ErrorBox = ({ message }) => {
+const ErrorBox = ({ message }: any) => {
   return (
     <Box
       mt={8}

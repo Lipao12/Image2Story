@@ -31,9 +31,18 @@ def createStory(input_text): # use llama to do this
             "inputs": input_text,
         }
         response = requests.post(API_URL, headers=headers, json=payloads)
-        data = json.loads(response.content)
-        generated_text = data[0]['generated_text']
-        return generated_text
+
+        
+        if response.status_code != 200:
+            return f"Erro na API: {response.text}", 500
+        
+        data = response.json()
+        print(response.json())
+        
+        if isinstance(data, list) and len(data) > 0:
+            return data[0].get('generated_text', '')
+        
+        return ""
     
     except Exception as exception:
         return{

@@ -12,21 +12,20 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { DostAnim } from "./dots-animation/dots-animation";
-import Loading from "./Loading";
 
 interface StoryContentProps {
   imageUrl: string;
   cenario: string;
-  audioFile: string;
+  audioFile?: string;
   story: { story: string; story_english: string };
 }
 
 const StoryContent = (props: StoryContentProps) => {
   const [story, setStory] = useState({ story: "", story_english: "" });
   //const [stringToCreate, setStringToCreate] = useState("");
-  const [audioPath, setAudioPath] = useState("");
+  //const [audioPath, setAudioPath] = useState("");
   const [isLoadingText, setIsLoadingText] = useState(false);
-  const [isLoadingAudio, setIsLoadingAudio] = useState<boolean>(false);
+  //const [isLoadingAudio, setIsLoadingAudio] = useState<boolean>(false);
 
   useEffect(() => {
     setStory(props.story);
@@ -105,105 +104,136 @@ const StoryContent = (props: StoryContentProps) => {
     continueStory(lastPStringEN, lastPStringPT);
   };
 
-  const convert2Speech = async () => {
-    setIsLoadingAudio(true);
+  /*const convert2Speech = async () => {
+    //setIsLoadingAudio(true);
     try {
       const response = await axios.get("http://localhost:4000/convert_speech", {
         params: {
           text: story.story_english,
         },
       });
-      setAudioPath(response.data.audio_file);
+      //setAudioPath(response.data.audio_file);
     } catch (err: any) {
       console.log(err);
     } finally {
-      setIsLoadingAudio(false);
+      //setIsLoadingAudio(false);
     }
-  };
+  };*/
 
   return (
     <Box mt={4}>
-      <img
-        src={props.imageUrl}
-        alt="Imagem escolhida"
-        style={{ maxWidth: "100%", borderRadius: "5px" }}
-      />
-      <Accordion mt={4} allowMultiple>
-        <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Box as="span" flex="1" textAlign="left">
+      {/* Imagem responsiva */}
+      <Box
+        position="relative"
+        width="100%"
+        borderRadius="5px"
+        overflow="hidden"
+        boxShadow="sm"
+      >
+        <img
+          src={props.imageUrl}
+          alt="Imagem escolhida"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+          }}
+        />
+      </Box>
+
+      {/* Acordeões responsivos */}
+      <Box mt={4}>
+        <Accordion allowMultiple>
+          {/* Cenário */}
+          <AccordionItem border="none" mb={4}>
+            <AccordionButton
+              bg="gray.100"
+              borderRadius="md"
+              _hover={{ bg: "gray.200" }}
+              px={4}
+              py={3}
+            >
+              <Box as="span" flex="1" textAlign="left" fontWeight="semibold">
                 Cenário
               </Box>
               <AccordionIcon />
             </AccordionButton>
-          </h2>
-          <AccordionPanel pb={4}>{props.cenario}</AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+            <AccordionPanel pb={4} px={0}>
+              <Text fontSize="md" whiteSpace="pre-wrap">
+                {props.cenario}
+              </Text>
+            </AccordionPanel>
+          </AccordionItem>
 
-      <Accordion mt={4} marginBottom={4} allowMultiple>
-        <AccordionItem>
-          <h1>
-            <AccordionButton>
-              <Box as="span" flex="1" textAlign="left">
+          {/* História */}
+          <AccordionItem border="none">
+            <AccordionButton
+              bg="gray.100"
+              borderRadius="md"
+              _hover={{ bg: "gray.200" }}
+              px={4}
+              py={3}
+            >
+              <Box as="span" flex="1" textAlign="left" fontWeight="semibold">
                 História
               </Box>
               <AccordionIcon />
             </AccordionButton>
-          </h1>
-          <AccordionPanel pb={4}>
-            <Box
-              p={4}
-              border="1px solid"
-              borderColor="gray.200"
-              borderRadius="md"
-              boxShadow="md"
-              bg="gray.50"
-            >
-              <Text marginBottom={4} whiteSpace="pre-wrap">
-                {story.story}
-              </Text>
-              {isLoadingText ? (
-                <DostAnim />
-              ) : (
-                <Text
-                  as="em"
-                  display="inline-block"
-                  padding="8px 16px"
-                  borderRadius="8px"
-                  backgroundColor="blue.500"
-                  color="white"
-                  fontWeight="bold"
-                  _hover={{
-                    cursor: "pointer",
-                    backgroundColor: "blue.600",
-                  }}
-                  onClick={handleContinuar}
-                >
-                  Continuar
+            <AccordionPanel pb={4} px={0}>
+              <Box
+                p={4}
+                border="1px solid"
+                borderColor="gray.200"
+                borderRadius="md"
+                boxShadow="sm"
+                bg="white"
+              >
+                <Text mb={4} whiteSpace="pre-wrap" fontSize="md">
+                  {props.story.story}
                 </Text>
-              )}
-            </Box>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+                {isLoadingText ? (
+                  <DostAnim />
+                ) : (
+                  <Button
+                    colorScheme="blue"
+                    size="md"
+                    width={{ base: "100%", md: "auto" }}
+                    onClick={handleContinuar}
+                    isLoading={isLoadingText}
+                  >
+                    Continuar História
+                  </Button>
+                )}
+              </Box>
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </Box>
 
-      <Button onClick={convert2Speech}>Gerar Áudio da historia</Button>
-      {isLoadingAudio && <Loading message={""} />}
-      {audioPath && !isLoadingAudio && (
-        <audio
-          controls
-          style={{ width: "100%", marginTop: "20px" }}
-          src={audioPath}
+      {/* Seção de Áudio 
+      <Box mt={6}>
+        <Button
+          onClick={convert2Speech}
+          colorScheme="teal"
+          size="md"
+          width={{ base: "100%", md: "auto" }}
+          isLoading={isLoadingAudio}
+          loadingText="Gerando Áudio..."
         >
-          Seu navegador não suporta a reprodução de áudio.
-        </audio>
-      )}
+          Gerar Áudio da História
+        </Button>
 
-      <Text fontSize="xs" mt={4}>
-        Obs.: por enquanto, o áudio será em inglês :)
-      </Text>
+        {false && audioPath && !isLoadingAudio && (
+          <Box mt={4}>
+            <audio controls style={{ width: "100%" }} src={audioPath}>
+              Seu navegador não suporta a reprodução de áudio.
+            </audio>
+            <Text fontSize="xs" mt={2} color="gray.500">
+              Obs.: por enquanto, o áudio será em inglês :)
+            </Text>
+          </Box>
+        )}
+      </Box>*/}
     </Box>
   );
 };

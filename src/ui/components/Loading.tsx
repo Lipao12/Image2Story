@@ -1,6 +1,6 @@
 import { Box, Spinner, Text } from "@chakra-ui/react";
 
-const Loading = (props) => {
+const Loading = (props: any) => {
   return (
     <Box
       display="flex"
